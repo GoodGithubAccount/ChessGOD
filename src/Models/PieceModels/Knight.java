@@ -1,7 +1,6 @@
 package Models.PieceModels;
 
 import Data.Settings;
-import Models.Board.Board;
 import Models.Board.BoardPosition;
 import Models.Moves.MoveTypeCalculator;
 import Models.Moves.MoveTypes;
@@ -9,11 +8,11 @@ import Models.Player.Player;
 
 import java.util.List;
 
-public class Queen extends Piece{
+public class Knight extends Piece{
 
-    MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove, MoveTypes.StraightMove};
-    public Queen(boolean isWhite, Player owner) {
-        super(isWhite, owner, Settings.QUEEN_MOVE_LIMIT);
+    MoveTypes[] myMoveTypes = {MoveTypes.KnightMove};
+    public Knight(boolean isWhite, Player owner) {
+        super(isWhite, owner, Settings.KNIGHT_MOVE_LIMIT);
     }
 
     @Override

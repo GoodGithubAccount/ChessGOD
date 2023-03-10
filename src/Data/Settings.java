@@ -4,6 +4,7 @@ public final class Settings {
 
     public final static int BOARD_SIZE = 8;
     public final static int QUEEN_MOVE_LIMIT = 10;
+    public final static int KING_MOVE_LIMIT = 10;
     public final static int ROOK_MOVE_LIMIT = 10;
     public final static int BISHOP_MOVE_LIMIT = 10;
     public final static int KNIGHT_MOVE_LIMIT = 1;

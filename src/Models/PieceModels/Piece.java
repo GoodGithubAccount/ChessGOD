@@ -10,16 +10,14 @@ public abstract class Piece {
 
     private Player owner = null;
     public boolean isWhite = false;
-    public String pieceTag = "";
 
     public boolean hasMoved = false;
 
     int moveLimit = 0;
 
-    public Piece(boolean isWhite, Player owner, String pieceTag, int moveLimit){
+    public Piece(boolean isWhite, Player owner, int moveLimit){
         this.isWhite = isWhite;
         this.owner = owner;
-        this.pieceTag = pieceTag;
         this.moveLimit = moveLimit;
     }
 

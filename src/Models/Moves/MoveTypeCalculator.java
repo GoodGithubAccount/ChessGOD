@@ -2,6 +2,7 @@ package Models.Moves;
 
 import Models.Board.BoardPosition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoveTypeCalculator {
@@ -10,7 +11,7 @@ public class MoveTypeCalculator {
     boolean isWhite;
     int moveLimit = 0;
 
-    List<BoardPosition> possibleMoves;
+    List<BoardPosition> possibleMoves = new ArrayList<>();
     BoardPosition[][] boardState;
     BoardPosition startPosition;
 
