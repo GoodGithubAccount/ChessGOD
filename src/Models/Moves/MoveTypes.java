@@ -5,6 +5,5 @@ public enum MoveTypes {
     StraightMove,
     KnightMove,
     CastlingMove,
-    PawnTake,
     PawnMove,
 }
