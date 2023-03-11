@@ -1,5 +1,6 @@
 package Models.Moves;
 
+import Models.Board.Board;
 import Models.Board.BoardPosition;
 
 import java.util.ArrayList;
@@ -59,10 +60,18 @@ public class MoveTypeCalculator {
                 moveToX += moveDirectionsX[i];
                 moveToY += moveDirectionsY[i];
 
-                BoardPosition movePos = boardState[moveToY + startPosition.y][moveToX + startPosition.x];
+                BoardPosition movePos = null;
+                try{
+                    movePos = boardState[moveToY + startPosition.y][moveToX + startPosition.x];
+                }
+                catch (ArrayIndexOutOfBoundsException e){
 
-                if(!moveVerification(movePos, false)){
-                    break;
+                }
+
+                if(movePos != null){
+                    if(!moveVerification(movePos, false)){
+                        break;
+                    }
                 }
             }
         }
@@ -98,6 +107,7 @@ public class MoveTypeCalculator {
             moveTo += direction;
 
             BoardPosition movePos = boardState[moveTo + startPosition.y][startPosition.x];
+            System.out.println("Trynna move to " + (startPosition.x) + "-" + (moveTo + startPosition.y));
 
             if(!moveVerification(movePos, false)){
                 break;

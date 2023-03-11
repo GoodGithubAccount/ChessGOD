@@ -1,3 +1,5 @@
+import Data.Settings;
+
 public class InputProcessor {
 
     public InputProcessor(){

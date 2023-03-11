@@ -70,7 +70,7 @@ public class Board {
                             break;
                     }
                 }
-                boardState[i][j] = new BoardPosition(i, j, newPiece);
+                boardState[i][j] = new BoardPosition(j, i, newPiece);
             }
         }
 
@@ -136,7 +136,7 @@ public class Board {
                     pieceTag = "eE";
                 }
 
-                System.out.print(pieceTag + " ");
+                System.out.print(pieceTag + " " + (j + 1) + "-" + (boardSize - i) + "   ");
             }
             System.out.println();
         }
