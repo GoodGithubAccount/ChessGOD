@@ -10,9 +10,11 @@ import java.util.List;
 
 public class PositionChecker {
 
-    // Checks for moves that would be illegal because you would give the opponent a check / mate
+    // Checks for checks
+    // Both used to check if player is checked, and if player will be checked if they move, thus move would be illegal
     public static boolean checkForCheck(boolean isWhite, Board myBoard) {
         List<Move> validMoves = new ArrayList<>();
+        List<Move> kingSideValidMoves = new ArrayList<>();
         BoardPosition enemyKing = null;
 
         for(int i = 0; i < myBoard.boardSize; i++){
@@ -25,19 +27,43 @@ public class PositionChecker {
                     }
                     else if(boardPiece.getClass() == King.class){
                         enemyKing = myBoard.boardState[i][j];
+                        validMoves.addAll(boardPiece.canMove(myBoard.boardState[i][j], myBoard));
+                    }
+                    else{
+                        kingSideValidMoves.addAll(boardPiece.canMove(myBoard.boardState[i][j], myBoard));
                     }
                 }
             }
         }
 
+        boolean check = false;
+        boolean noMoves = true;
+
         for (Move move : validMoves) {
             if(move != null){
                 if (move.moveTriggerPosition == enemyKing) {
-                    System.out.println("Cant move there cuz dead");
-                    return false;
+                    check = true;
                 }
             }
         }
+
+        for (Move move : kingSideValidMoves) {
+            if(move != null){
+                noMoves = false;
+            }
+        }
+
+        if(noMoves && check){
+            System.out.println("CHECKMATE GAME OVER");
+        }
+        else if(noMoves && !check){
+            System.out.println("STALEMATE GAME OVER");
+        }
+        else if(check && !noMoves){
+            System.out.println("CHECK");
+            return false;
+        }
+
         return true;
     }
 }

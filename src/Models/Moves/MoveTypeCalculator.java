@@ -264,14 +264,6 @@ public class MoveTypeCalculator {
         return (PositionChecker.checkForCheck(isWhite, mateCheckBoard));
     }
 
-    public boolean moveMateVerify(Move move){
-        // Rework entire move handler as a new data class.
-
-        //BoardPosition[][] mateBoard = myBoard.boardState;
-        //mateBoard[movePos.y][movePos.x].piece = startPosition.getPiece();
-        return false;
-    }
-
     public boolean moveVerification(Move move, boolean hasToTake){
 
         if(move.movePieceEndPosition.getPiece() == null){

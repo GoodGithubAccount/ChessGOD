@@ -1,5 +1,6 @@
 import Models.Board.Board;
 import Models.Board.BoardPosition;
+import Models.Board.PositionChecker;
 import Models.Moves.Move;
 import Models.Moves.PieceMover;
 import Models.PieceModels.Piece;
@@ -56,7 +57,9 @@ public class ChessGOD {
             }
 
             if (myMove != null) {
+                boolean isWhite = myMove.movePieceStartPosition.piece.isWhite;
                 PieceMover.movePiece(myBoard, myMove);
+                PositionChecker.checkForCheck(isWhite,myBoard);
             } else {
                 System.out.println("Invalid move");
             }
