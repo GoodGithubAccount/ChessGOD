@@ -8,4 +8,7 @@ public enum MoveTypes {
     KnightMove,
     CastlingMove,
     PawnMove,
+    EnPassant,
+    PromotionMove,
+    PawnDouble,
 }

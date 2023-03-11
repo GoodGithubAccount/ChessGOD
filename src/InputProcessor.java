@@ -32,4 +32,5 @@ public class InputProcessor {
 
         return storedInput;
     }
+
 }

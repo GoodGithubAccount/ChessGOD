@@ -3,6 +3,7 @@ package Models.Moves;
 import Models.Board.Board;
 import Models.Board.BoardPosition;
 import Models.PieceModels.Pawn;
+import Models.PieceModels.Piece;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,24 +15,30 @@ public class MoveTypeCalculator {
     boolean isWhite;
     int moveLimit = 0;
 
-    List<BoardPosition> possibleMoves = new ArrayList<>();
-    BoardPosition[][] boardState;
+    List<Move> possibleMoves = new ArrayList<>();
     BoardPosition startPosition;
     boolean hasMoved;
 
     Board myBoard;
 
-    public MoveTypeCalculator(MoveTypes[] moveTypes, boolean isWhite, BoardPosition[][] boardState, BoardPosition startPosition, int moveLimit, boolean hasMoved, Board myBoard){
-        this.moveTypes = moveTypes;
-        this.isWhite = isWhite;
-        this.boardState = boardState;
+    Piece myPiece;
+
+    public MoveTypeCalculator(BoardPosition startPosition, Board myBoard){
         this.startPosition = startPosition;
-        this.moveLimit = moveLimit;
-        this.hasMoved = hasMoved;
+
+        myPiece = startPosition.getPiece();
+
+        if(myPiece != null){
+            this.moveTypes = myPiece.myMoveTypes;
+            this.isWhite = myPiece.isWhite;
+            this.moveLimit = myPiece.moveLimit;
+            this.hasMoved = myPiece.hasMoved;
+        }
+
         this.myBoard = myBoard;
     }
 
-    public List<BoardPosition> calculateMoves(){
+    public List<Move> calculateMoves(){
         for(int i = 0; i < moveTypes.length; i++){
             switch(moveTypes[i]){
                 case CastlingMove -> castlingCheck();
@@ -69,14 +76,15 @@ public class MoveTypeCalculator {
 
                 BoardPosition movePos = null;
                 try{
-                    movePos = boardState[moveToY + startPosition.y][moveToX + startPosition.x];
+                    movePos = myBoard.boardState[moveToY + startPosition.y][moveToX + startPosition.x];
                 }
                 catch (ArrayIndexOutOfBoundsException e){
 
                 }
 
                 if(movePos != null){
-                    if(!moveVerification(movePos, false)){
+                    Move myMove = new Move(MoveTypes.StraightMove, startPosition, movePos, movePos, null, null);
+                    if(!moveVerification(myMove, false)){
                         break;
                     }
                 }
@@ -91,10 +99,11 @@ public class MoveTypeCalculator {
             int moveToX = moveDirectionsX[i];
             int moveToY = moveDirectionsY[i];
 
-            BoardPosition movePos = boardState[moveToY + startPosition.y][moveToX + startPosition.x];
+            BoardPosition movePos = myBoard.boardState[moveToY + startPosition.y][moveToX + startPosition.x];
 
             if(movePos.x >= 0 && movePos.x <= 7 && movePos.y >= 0 && movePos.y <= 7){
-                moveVerification(movePos, false);
+                Move myMove = new Move(MoveTypes.KnightMove, startPosition, movePos, movePos, null, null);
+                moveVerification(myMove, false);
             }
         }
     }
@@ -117,19 +126,31 @@ public class MoveTypeCalculator {
         for(int i = 0; i < moveLimit; i++){
             moveTo += direction;
 
-            BoardPosition movePos = boardState[moveTo + startPosition.y][startPosition.x];
+            BoardPosition movePos = myBoard.boardState[moveTo + startPosition.y][startPosition.x];
             System.out.println("Trynna move to " + (startPosition.x) + "-" + (moveTo + startPosition.y));
 
-            if(!moveVerification(movePos, false)){
+            MoveTypes myType;
+            if(i > 0){
+                myType = MoveTypes.PawnDouble;
+            }
+            else{
+                myType = MoveTypes.PawnMove;
+            }
+
+
+            Move myMove = new Move(myType, startPosition, movePos, movePos, null, null);
+            if(!moveVerification(myMove, false)){
                 break;
             }
         }
 
-        BoardPosition takeLeft = boardState[direction + startPosition.y][startPosition.x - 1];
-        BoardPosition takeRight = boardState[direction + startPosition.y][startPosition.x + 1];
+        BoardPosition takeLeft = myBoard.boardState[direction + startPosition.y][startPosition.x - 1];
+        BoardPosition takeRight = myBoard.boardState[direction + startPosition.y][startPosition.x + 1];
 
-        moveVerification(takeLeft, true);
-        moveVerification(takeRight, true);
+        Move myMoveLeft = new Move(MoveTypes.PawnMove, startPosition, takeLeft, takeLeft, null, null);
+        Move myMoveRight = new Move(MoveTypes.PawnMove, startPosition, takeRight, takeRight, null, null);
+        moveVerification(myMoveLeft, true);
+        moveVerification(myMoveRight, true);
     }
     public void castlingCheck(){
         if(!hasMoved){
@@ -137,62 +158,109 @@ public class MoveTypeCalculator {
             BoardPosition queenSideRook = null;
 
             try{
-                kingSideRook = boardState[startPosition.y][startPosition.x + 3];
+                kingSideRook = myBoard.boardState[startPosition.y][startPosition.x + 3];
             }
             catch (ArrayIndexOutOfBoundsException e){
 
             }
 
             try{
-                queenSideRook = boardState[startPosition.y][startPosition.x - 4];
+                queenSideRook = myBoard.boardState[startPosition.y][startPosition.x - 4];
             }
             catch (ArrayIndexOutOfBoundsException e){
 
             }
 
+            List<BoardPosition> castleMoves = new ArrayList<>();
+
             if(kingSideRook != null && kingSideRook.piece != null && !kingSideRook.piece.hasMoved){
                 boolean canMove = true;
                 for(int i = startPosition.x + 1; i < startPosition.x + 3; i++){
-                    BoardPosition pos = boardState[startPosition.y][i];
+                    BoardPosition pos = myBoard.boardState[startPosition.y][i];
                     if(pos.piece != null){
                         canMove = false;
                     }
                 }
 
+                castleMoves.add(kingSideRook);
+
                 if(canMove){
-                    possibleMoves.add(kingSideRook);
+                    castleMoves.add(kingSideRook);
                 }
             }
 
             if(queenSideRook != null && queenSideRook.piece != null && !queenSideRook.piece.hasMoved){
                 boolean canMove = true;
                 for(int i = startPosition.x - 1; i > startPosition.x - 4; i--){
-                    BoardPosition pos = boardState[startPosition.y][i];
+                    BoardPosition pos = myBoard.boardState[startPosition.y][i];
                     if(pos.piece != null){
                         canMove = false;
                     }
                 }
 
                 if(canMove){
-                    possibleMoves.add(queenSideRook);
+                    castleMoves.add(queenSideRook);
                 }
+            }
+
+            int xModifier;
+
+            for (BoardPosition move : castleMoves) {
+                if(startPosition.x < move.x){
+                    xModifier = 2;
+                }
+                else{
+                    xModifier = -2;
+                }
+
+                BoardPosition kingEndPos = myBoard.boardState[startPosition.y][startPosition.x + xModifier];
+                BoardPosition rookEndPos = myBoard.boardState[startPosition.y][startPosition.x + (xModifier / 2)];
+
+                moveVerify(new Move(MoveTypes.CastlingMove, startPosition, kingEndPos, move, move, rookEndPos));
             }
         }
     }
 
-    public boolean moveVerification(BoardPosition movePos, boolean hasToTake){
-        if(movePos.piece == null){
+    public boolean moveVerify(Move myMove){
+        if(myMove.moveType != MoveTypes.CastlingMove){
+
+        }
+
+        mateCheck(myMove);
+
+        return false;
+    }
+
+    public boolean mateCheck(Move myMove){
+
+        return false;
+    }
+
+    public boolean moveMateVerify(Move move){
+        // Rework entire move handler as a new data class.
+
+        //BoardPosition[][] mateBoard = myBoard.boardState;
+        //mateBoard[movePos.y][movePos.x].piece = startPosition.getPiece();
+        return false;
+    }
+
+    public boolean moveVerification(Move move, boolean hasToTake){
+        if(moveMateVerify(move)){
+            return false;
+        }
+
+        if(move.movePieceEndPosition.getPiece() == null){
             if(!hasToTake){
-                possibleMoves.add(movePos);
+                possibleMoves.add(move);
             }
-            else if(movePos == myBoard.enPassant && startPosition.getPiece().getClass() == Pawn.class) {
-                System.out.println("SHOULD BE ABLE TO");
-                possibleMoves.add(movePos);
+            else if(move.movePieceEndPosition == myBoard.enPassant && startPosition.getPiece().getClass() == Pawn.class) {
+                Move myMove = new Move(MoveTypes.EnPassant, move.movePieceStartPosition, move.movePieceEndPosition, myBoard.enPassant, myBoard.enPassantPiecePos, myBoard.enPassantPiecePos);
+                possibleMoves.add(myMove);
             }
             return true;
         }
-        else if(movePos.piece.isWhite != isWhite){
-            possibleMoves.add(movePos);
+        else if(move.movePieceEndPosition.piece.isWhite != isWhite){
+            possibleMoves.add(move);
             return false;
         }
         else{

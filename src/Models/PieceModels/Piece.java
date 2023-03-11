@@ -2,27 +2,24 @@ package Models.PieceModels;
 
 import Models.Board.Board;
 import Models.Board.BoardPosition;
+import Models.Moves.Move;
+import Models.Moves.MoveTypes;
 import Models.Player.Player;
 
 import java.util.List;
 
 public abstract class Piece {
 
-    private Player owner = null;
     public boolean isWhite = false;
     public boolean hasMoved = false;
-
-    int moveLimit = 0;
-
-    Board myBoard;
-
-    public Piece(boolean isWhite, Player owner, int moveLimit, Board myBoard){
+    public int moveLimit = 0;
+    public MoveTypes[] myMoveTypes;
+    public Piece(boolean isWhite, int moveLimit, MoveTypes[] myMoveTypes){
         this.isWhite = isWhite;
-        this.owner = owner;
         this.moveLimit = moveLimit;
-        this.myBoard = myBoard;
+        this.myMoveTypes = myMoveTypes;
     }
 
-    public abstract List<BoardPosition> canMove(BoardPosition[][] boardState, BoardPosition startPosition, Board myBoard);
+    public abstract List<Move> canMove(BoardPosition startPosition, Board myBoard);
 
 }
