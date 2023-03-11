@@ -47,10 +47,11 @@ public class ChessGOD {
             Move myMove = null;
 
             for (Move move : validMoves) {
-                if (move.moveTriggerPosition == endPosition) {
-                    System.out.println("CHECKED");
-                    myMove = move;
-                    break;
+                if(move != null){
+                    if (move.moveTriggerPosition == endPosition) {
+                        myMove = move;
+                        break;
+                    }
                 }
             }
 

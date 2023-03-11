@@ -8,12 +8,14 @@ import java.util.List;
 
 public class Board {
 
-    private int boardSize = Settings.BOARD_SIZE;
+    public int boardSize = Settings.BOARD_SIZE;
 
     public BoardPosition[][] boardState = new BoardPosition[boardSize][boardSize];
 
     public BoardPosition enPassant = null;
     public BoardPosition enPassantPiecePos = null;
+
+    public boolean mateCheck = true;
 
     public Board() {
     }
@@ -114,5 +116,25 @@ public class Board {
             }
             System.out.println();
         }
+    }
+
+    public Board cloneBoard() {
+        Board myClone = new Board();
+        if(this.enPassant != null){
+            myClone.enPassant = new BoardPosition(enPassant.x, enPassant.y, enPassant.piece);
+            myClone.enPassantPiecePos = new BoardPosition(enPassantPiecePos.x, enPassantPiecePos.y, enPassantPiecePos.piece);
+        }
+        else{
+            myClone.enPassant = null;
+            myClone.enPassantPiecePos = null;
+        }
+
+        for(int i = 0; i < boardSize; i++){
+            for(int j = 0; j < boardSize; j++){
+                myClone.boardState[i][j] = new BoardPosition(boardState[i][j].x, boardState[i][j].y, boardState[i][j].piece);
+            }
+        }
+
+        return myClone;
     }
 }

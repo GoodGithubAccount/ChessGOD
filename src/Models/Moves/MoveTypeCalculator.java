@@ -2,9 +2,11 @@ package Models.Moves;
 
 import Models.Board.Board;
 import Models.Board.BoardPosition;
+import Models.Board.PositionChecker;
 import Models.PieceModels.Pawn;
 import Models.PieceModels.Piece;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +24,8 @@ public class MoveTypeCalculator {
     Board myBoard;
 
     Piece myPiece;
+
+    Move curMove = null;
 
     public MoveTypeCalculator(BoardPosition startPosition, Board myBoard){
         this.startPosition = startPosition;
@@ -83,8 +87,8 @@ public class MoveTypeCalculator {
                 }
 
                 if(movePos != null){
-                    Move myMove = new Move(MoveTypes.StraightMove, startPosition, movePos, movePos, null, null);
-                    if(!moveVerification(myMove, false)){
+                    Move myMove = new Move(MoveTypes.StraightMove, startPosition, movePos, movePos, movePos, movePos);
+                    if(!moveVerify(myMove, false)){
                         break;
                     }
                 }
@@ -99,11 +103,11 @@ public class MoveTypeCalculator {
             int moveToX = moveDirectionsX[i];
             int moveToY = moveDirectionsY[i];
 
-            BoardPosition movePos = myBoard.boardState[moveToY + startPosition.y][moveToX + startPosition.x];
+            if(moveToY + startPosition.y >= 0 && moveToY + startPosition.y <= 7 && moveToX + startPosition.x >= 0 && moveToX + startPosition.x <= 7){
+                BoardPosition movePos = myBoard.boardState[moveToY + startPosition.y][moveToX + startPosition.x];
 
-            if(movePos.x >= 0 && movePos.x <= 7 && movePos.y >= 0 && movePos.y <= 7){
-                Move myMove = new Move(MoveTypes.KnightMove, startPosition, movePos, movePos, null, null);
-                moveVerification(myMove, false);
+                Move myMove = new Move(MoveTypes.KnightMove, startPosition, movePos, movePos, movePos, movePos);
+                moveVerify(myMove, false);
             }
         }
     }
@@ -127,7 +131,6 @@ public class MoveTypeCalculator {
             moveTo += direction;
 
             BoardPosition movePos = myBoard.boardState[moveTo + startPosition.y][startPosition.x];
-            System.out.println("Trynna move to " + (startPosition.x) + "-" + (moveTo + startPosition.y));
 
             MoveTypes myType;
             if(i > 0){
@@ -138,19 +141,22 @@ public class MoveTypeCalculator {
             }
 
 
-            Move myMove = new Move(myType, startPosition, movePos, movePos, null, null);
-            if(!moveVerification(myMove, false)){
+            Move myMove = new Move(myType, startPosition, movePos, movePos, movePos, movePos);
+            if(!moveVerify(myMove, false)){
                 break;
             }
         }
 
-        BoardPosition takeLeft = myBoard.boardState[direction + startPosition.y][startPosition.x - 1];
-        BoardPosition takeRight = myBoard.boardState[direction + startPosition.y][startPosition.x + 1];
-
-        Move myMoveLeft = new Move(MoveTypes.PawnMove, startPosition, takeLeft, takeLeft, null, null);
-        Move myMoveRight = new Move(MoveTypes.PawnMove, startPosition, takeRight, takeRight, null, null);
-        moveVerification(myMoveLeft, true);
-        moveVerification(myMoveRight, true);
+        try {
+            BoardPosition takeLeft = myBoard.boardState[direction + startPosition.y][startPosition.x - 1];
+            Move myMoveLeft = new Move(MoveTypes.PawnMove, startPosition, takeLeft, takeLeft, startPosition, startPosition);
+            moveVerify(myMoveLeft, true);
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            BoardPosition takeRight = myBoard.boardState[direction + startPosition.y][startPosition.x + 1];
+            Move myMoveRight = new Move(MoveTypes.PawnMove, startPosition, takeRight, takeRight, startPosition, startPosition);
+            moveVerify(myMoveRight, true);
+        }
     }
     public void castlingCheck(){
         if(!hasMoved){
@@ -216,24 +222,46 @@ public class MoveTypeCalculator {
                 BoardPosition kingEndPos = myBoard.boardState[startPosition.y][startPosition.x + xModifier];
                 BoardPosition rookEndPos = myBoard.boardState[startPosition.y][startPosition.x + (xModifier / 2)];
 
-                moveVerify(new Move(MoveTypes.CastlingMove, startPosition, kingEndPos, move, move, rookEndPos));
+                moveVerify(new Move(MoveTypes.CastlingMove, startPosition, kingEndPos, move, move, rookEndPos), false);
             }
         }
     }
 
-    public boolean moveVerify(Move myMove){
-        if(myMove.moveType != MoveTypes.CastlingMove){
+    public boolean moveVerify(Move myMove, boolean hasToTake){
 
+        boolean returnVal = true;
+
+        if(myMove.moveType != MoveTypes.CastlingMove){
+            returnVal = moveVerification(myMove, hasToTake);
         }
 
-        mateCheck(myMove);
+        if(myBoard.mateCheck){
+            if(mateCheck(myMove)){
+                possibleMoves.add(curMove);
+            }
+        }
+        else{
+            possibleMoves.add(curMove);
+        }
 
-        return false;
+        return returnVal;
     }
 
     public boolean mateCheck(Move myMove){
 
-        return false;
+        Board mateCheckBoard = myBoard.cloneBoard();
+        mateCheckBoard.mateCheck = false;
+
+        Move mateMove = new Move(myMove.moveType,
+                mateCheckBoard.boardState[myMove.movePieceStartPosition.y][myMove.movePieceStartPosition.x],
+        mateCheckBoard.boardState[myMove.movePieceEndPosition.y][myMove.movePieceEndPosition.x],
+        mateCheckBoard.boardState[myMove.moveTriggerPosition.y][myMove.moveTriggerPosition.x],
+        mateCheckBoard.boardState[myMove.otherPieceStartPosition.y][myMove.otherPieceStartPosition.x],
+        mateCheckBoard.boardState[myMove.otherPieceEndPosition.y][myMove.otherPieceEndPosition.x]);
+
+        PieceMover.movePiece(mateCheckBoard, mateMove);
+
+        return (PositionChecker.checkForCheck(isWhite, mateCheckBoard));
     }
 
     public boolean moveMateVerify(Move move){
@@ -245,22 +273,19 @@ public class MoveTypeCalculator {
     }
 
     public boolean moveVerification(Move move, boolean hasToTake){
-        if(moveMateVerify(move)){
-            return false;
-        }
 
         if(move.movePieceEndPosition.getPiece() == null){
             if(!hasToTake){
-                possibleMoves.add(move);
+                curMove = move;
             }
             else if(move.movePieceEndPosition == myBoard.enPassant && startPosition.getPiece().getClass() == Pawn.class) {
                 Move myMove = new Move(MoveTypes.EnPassant, move.movePieceStartPosition, move.movePieceEndPosition, myBoard.enPassant, myBoard.enPassantPiecePos, myBoard.enPassantPiecePos);
-                possibleMoves.add(myMove);
+                curMove = myMove;
             }
             return true;
         }
         else if(move.movePieceEndPosition.piece.isWhite != isWhite){
-            possibleMoves.add(move);
+            curMove = move;
             return false;
         }
         else{

@@ -6,7 +6,7 @@ public class BoardPosition {
 
     public int x;
     public int y;
-    public Piece piece = null;
+    public Piece piece;
 
     public BoardPosition(int x, int y, Piece piece){
         this.x = x;

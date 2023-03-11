@@ -43,15 +43,16 @@ public class PieceMover {
     }
     public static void movePiece(Board myBoard, Move myMove) {
 
-        myMove.movePieceStartPosition.getPiece().hasMoved = true;
+        if (myMove.movePieceStartPosition.piece != null) {
+            myMove.movePieceStartPosition.piece.hasMoved = true;
 
-        switch(myMove.moveType){
-            case EnPassant -> moveEnPassant(myBoard, myMove);
-            case CastlingMove -> moveCastle(myBoard, myMove);
-            case PromotionMove -> movePromotion(myBoard, myMove);
-            case PawnDouble -> movePawnDouble(myBoard, myMove);
-            default -> moveDef(myBoard, myMove);
+            switch (myMove.moveType) {
+                case EnPassant -> moveEnPassant(myBoard, myMove);
+                case CastlingMove -> moveCastle(myBoard, myMove);
+                case PromotionMove -> movePromotion(myBoard, myMove);
+                case PawnDouble -> movePawnDouble(myBoard, myMove);
+                default -> moveDef(myBoard, myMove);
+            }
         }
     }
-
 }
