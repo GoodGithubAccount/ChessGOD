@@ -10,7 +10,6 @@ public abstract class Piece {
 
     private Player owner = null;
     public boolean isWhite = false;
-
     public boolean hasMoved = false;
 
     int moveLimit = 0;

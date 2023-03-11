@@ -17,7 +17,7 @@ public final class Settings {
         "eE-eE-eE-eE-eE-eE-eE-eE/" +
         "eE-eE-eE-eE-eE-eE-eE-eE/" +
         "wP-wP-wP-wP-wP-wP-wP-wP/" +
-        "wR-wN-wB-wQ-wK-wB-wN-wR/";
+        "wR-eE-eE-eE-wK-eE-eE-wR/";
 
 
 }

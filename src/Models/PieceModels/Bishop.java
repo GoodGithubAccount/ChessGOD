@@ -17,7 +17,7 @@ public class Bishop extends Piece{
 
     @Override
     public List<BoardPosition> canMove(BoardPosition[][] boardState, BoardPosition startPosition) {
-        MoveTypeCalculator myMoveBrain = new MoveTypeCalculator(myMoveTypes, isWhite, boardState, startPosition, moveLimit);
+        MoveTypeCalculator myMoveBrain = new MoveTypeCalculator(myMoveTypes, isWhite, boardState, startPosition, moveLimit, hasMoved);
 
         return myMoveBrain.calculateMoves();
     }

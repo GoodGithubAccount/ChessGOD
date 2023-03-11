@@ -16,12 +16,15 @@ public class MoveTypeCalculator {
     BoardPosition[][] boardState;
     BoardPosition startPosition;
 
-    public MoveTypeCalculator(MoveTypes[] moveTypes, boolean isWhite, BoardPosition[][] boardState, BoardPosition startPosition, int moveLimit){
+    boolean hasMoved;
+
+    public MoveTypeCalculator(MoveTypes[] moveTypes, boolean isWhite, BoardPosition[][] boardState, BoardPosition startPosition, int moveLimit, boolean hasMoved){
         this.moveTypes = moveTypes;
         this.isWhite = isWhite;
         this.boardState = boardState;
         this.startPosition = startPosition;
         this.moveLimit = moveLimit;
+        this.hasMoved = hasMoved;
     }
 
     public List<BoardPosition> calculateMoves(){
@@ -92,6 +95,10 @@ public class MoveTypeCalculator {
         }
     }
     public void pawnMoveCheck(int moveLimit){
+        if(!hasMoved){
+            moveLimit += 1;
+        }
+
         int direction;
 
         if(isWhite){
@@ -121,7 +128,52 @@ public class MoveTypeCalculator {
         moveVerification(takeRight, true);
     }
     public void castlingCheck(){
+        if(!hasMoved){
+            BoardPosition kingSideRook = null;
+            BoardPosition queenSideRook = null;
 
+            try{
+                kingSideRook = boardState[startPosition.y][startPosition.x + 3];
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+
+            }
+
+            try{
+                queenSideRook = boardState[startPosition.y][startPosition.x - 4];
+            }
+            catch (ArrayIndexOutOfBoundsException e){
+
+            }
+
+            if(kingSideRook != null && kingSideRook.piece != null && !kingSideRook.piece.hasMoved){
+                boolean canMove = true;
+                for(int i = startPosition.x + 1; i < startPosition.x + 3; i++){
+                    BoardPosition pos = boardState[startPosition.y][i];
+                    if(pos.piece != null){
+                        canMove = false;
+                    }
+                }
+
+                if(canMove){
+                    possibleMoves.add(kingSideRook);
+                }
+            }
+
+            if(queenSideRook != null && queenSideRook.piece != null && !queenSideRook.piece.hasMoved){
+                boolean canMove = true;
+                for(int i = startPosition.x - 1; i > startPosition.x - 4; i--){
+                    BoardPosition pos = boardState[startPosition.y][i];
+                    if(pos.piece != null){
+                        canMove = false;
+                    }
+                }
+
+                if(canMove){
+                    possibleMoves.add(queenSideRook);
+                }
+            }
+        }
     }
 
     public boolean moveVerification(BoardPosition movePos, boolean hasToTake){

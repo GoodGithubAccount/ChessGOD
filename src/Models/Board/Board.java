@@ -90,8 +90,30 @@ public class Board {
         }
 
         if (isValidMove) {
-            endPosition.setPiece(startPosition.getPiece());
-            startPosition.setPiece(null);
+            if(!startPosition.getPiece().hasMoved){
+                startPosition.getPiece().hasMoved = true;
+            }
+
+            // If it's a castling move
+            if(startPosition.getPiece().isWhite == endPosition.getPiece().isWhite){
+                int xModifier;
+                if(startPosition.x < endPosition.x){
+                    xModifier = 2;
+                }
+                else{
+                    xModifier = -2;
+                }
+
+                boardState[startPosition.y][startPosition.x + xModifier].setPiece(startPosition.getPiece());
+                startPosition.setPiece(null);
+
+                boardState[startPosition.y][startPosition.x + (xModifier / 2)].setPiece(endPosition.getPiece());
+                endPosition.setPiece(null);
+            }
+            else{ // Normal move
+                endPosition.setPiece(startPosition.getPiece());
+                startPosition.setPiece(null);
+            }
         } else {
             System.out.println("Invalid move");
         }
