@@ -1,5 +1,7 @@
 package Models.Moves;
 
+import java.util.function.Predicate;
+
 public enum MoveTypes {
     DiagonalMove,
     StraightMove,

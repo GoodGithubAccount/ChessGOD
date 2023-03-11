@@ -14,12 +14,15 @@ public abstract class Piece {
 
     int moveLimit = 0;
 
-    public Piece(boolean isWhite, Player owner, int moveLimit){
+    Board myBoard;
+
+    public Piece(boolean isWhite, Player owner, int moveLimit, Board myBoard){
         this.isWhite = isWhite;
         this.owner = owner;
         this.moveLimit = moveLimit;
+        this.myBoard = myBoard;
     }
 
-    public abstract List<BoardPosition> canMove(BoardPosition[][] boardState, BoardPosition startPosition);
+    public abstract List<BoardPosition> canMove(BoardPosition[][] boardState, BoardPosition startPosition, Board myBoard);
 
 }

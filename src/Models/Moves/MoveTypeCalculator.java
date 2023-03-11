@@ -2,8 +2,10 @@ package Models.Moves;
 
 import Models.Board.Board;
 import Models.Board.BoardPosition;
+import Models.PieceModels.Pawn;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MoveTypeCalculator {
@@ -15,16 +17,18 @@ public class MoveTypeCalculator {
     List<BoardPosition> possibleMoves = new ArrayList<>();
     BoardPosition[][] boardState;
     BoardPosition startPosition;
-
     boolean hasMoved;
 
-    public MoveTypeCalculator(MoveTypes[] moveTypes, boolean isWhite, BoardPosition[][] boardState, BoardPosition startPosition, int moveLimit, boolean hasMoved){
+    Board myBoard;
+
+    public MoveTypeCalculator(MoveTypes[] moveTypes, boolean isWhite, BoardPosition[][] boardState, BoardPosition startPosition, int moveLimit, boolean hasMoved, Board myBoard){
         this.moveTypes = moveTypes;
         this.isWhite = isWhite;
         this.boardState = boardState;
         this.startPosition = startPosition;
         this.moveLimit = moveLimit;
         this.hasMoved = hasMoved;
+        this.myBoard = myBoard;
     }
 
     public List<BoardPosition> calculateMoves(){
@@ -179,6 +183,10 @@ public class MoveTypeCalculator {
     public boolean moveVerification(BoardPosition movePos, boolean hasToTake){
         if(movePos.piece == null){
             if(!hasToTake){
+                possibleMoves.add(movePos);
+            }
+            else if(movePos == myBoard.enPassant && startPosition.getPiece().getClass() == Pawn.class) {
+                System.out.println("SHOULD BE ABLE TO");
                 possibleMoves.add(movePos);
             }
             return true;

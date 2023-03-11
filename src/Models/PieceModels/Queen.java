@@ -12,13 +12,13 @@ import java.util.List;
 public class Queen extends Piece{
 
     MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove, MoveTypes.StraightMove};
-    public Queen(boolean isWhite, Player owner) {
-        super(isWhite, owner, Settings.QUEEN_MOVE_LIMIT);
+    public Queen(boolean isWhite, Player owner, Board myBoard) {
+        super(isWhite, owner, Settings.QUEEN_MOVE_LIMIT, myBoard);
     }
 
     @Override
-    public List<BoardPosition> canMove(BoardPosition[][] boardState, BoardPosition startPosition) {
-        MoveTypeCalculator myMoveBrain = new MoveTypeCalculator(myMoveTypes, isWhite, boardState, startPosition, moveLimit, hasMoved);
+    public List<BoardPosition> canMove(BoardPosition[][] boardState, BoardPosition startPosition, Board myBoard) {
+        MoveTypeCalculator myMoveBrain = new MoveTypeCalculator(myMoveTypes, isWhite, boardState, startPosition, moveLimit, hasMoved, myBoard);
 
         return myMoveBrain.calculateMoves();
     }
