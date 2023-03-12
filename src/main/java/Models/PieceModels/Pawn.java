@@ -14,7 +14,7 @@ public class Pawn extends Piece{
 
     public static final MoveTypes[] myMoveTypes = {MoveTypes.PawnMove};
     public Pawn(boolean isWhite) {
-        super(isWhite, Settings.PAWN_MOVE_LIMIT, myMoveTypes);
+        super(isWhite, Settings.PAWN_MOVE_LIMIT, myMoveTypes, 100);
     }
 
     @Override

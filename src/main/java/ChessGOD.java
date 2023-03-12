@@ -1,3 +1,4 @@
+import Models.AI.Brain;
 import Models.Board.Board;
 import Models.Board.BoardPosition;
 import Models.Board.PositionChecker;
@@ -19,11 +20,16 @@ public class ChessGOD {
 
         InputProcessor myInputProcessor = new InputProcessor();
 
+        Brain myBrain = new Brain(5);
         Scanner myScanner = new Scanner(System.in);
         while(true){
             if(whiteTurn){
+                System.out.println("WHITE");
+                myBrain.recommendMove(true, myBoard);
             }
             else{
+                System.out.println("BLACK");
+                myBrain.recommendMove(false, myBoard);
             }
 
             System.out.print("Awaiting input (x,y-x,y) : ");

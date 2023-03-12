@@ -22,4 +22,16 @@ public class BoardPosition {
         return piece;
     }
 
+    public BoardPosition clonePosition(){
+        Piece clonePiece = null;
+
+        if(piece != null){
+            clonePiece = piece.clonePiece();
+        }
+
+        BoardPosition newBoardPos = new BoardPosition(x,y, clonePiece);
+
+        return newBoardPos;
+    }
+
 }

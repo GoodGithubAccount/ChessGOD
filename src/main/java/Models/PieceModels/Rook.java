@@ -14,7 +14,7 @@ public class Rook extends Piece{
 
     public static final MoveTypes[] myMoveTypes = {MoveTypes.StraightMove};
     public Rook(boolean isWhite) {
-        super(isWhite, Settings.ROOK_MOVE_LIMIT, myMoveTypes);
+        super(isWhite, Settings.ROOK_MOVE_LIMIT, myMoveTypes, 500);
     }
 
     @Override
