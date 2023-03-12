@@ -9,13 +9,10 @@ import java.util.List;
 public class Board {
 
     public int boardSize = Settings.BOARD_SIZE;
-
     public BoardPosition[][] boardState = new BoardPosition[boardSize][boardSize];
-
     public BoardPosition enPassant = null;
     public BoardPosition enPassantPiecePos = null;
-
-    public boolean mateCheck = true;
+    public int depth = 0;
 
     public Board() {
     }
@@ -127,6 +124,8 @@ public class Board {
             myClone.enPassant = null;
             myClone.enPassantPiecePos = null;
         }
+
+        myClone.depth = depth + 1;
 
         for(int i = 0; i < boardSize; i++){
             for(int j = 0; j < boardSize; j++){

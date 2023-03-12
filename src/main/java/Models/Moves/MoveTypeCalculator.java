@@ -57,7 +57,7 @@ public class MoveTypeCalculator {
     }
     public void straightMoveCheck(int moveLimit){
         int[] moveDirectionsX = {1, -1, 0, 0};
-        int[] moveDirectionsY = {0, 0, 1, 1};
+        int[] moveDirectionsY = {0, 0, 1, -1};
 
         StraightOrDiagonalMoveCheck(moveLimit, moveDirectionsX, moveDirectionsY);
     }
@@ -234,23 +234,26 @@ public class MoveTypeCalculator {
         if(myMove.moveType != MoveTypes.CastlingMove){
             returnVal = moveVerification(myMove, hasToTake);
         }
+        else{
+            curMove = myMove;
+        }
 
-        if(myBoard.mateCheck){
-            if(mateCheck(myMove)){
+        if(curMove != null){
+            if(myBoard.depth == 0){
+                if(mateCheck(myMove)){
+                    possibleMoves.add(curMove);
+                }
+            }
+            else{
                 possibleMoves.add(curMove);
             }
-        }
-        else{
-            possibleMoves.add(curMove);
         }
 
         return returnVal;
     }
 
     public boolean mateCheck(Move myMove){
-
         Board mateCheckBoard = myBoard.cloneBoard();
-        mateCheckBoard.mateCheck = false;
 
         Move mateMove = new Move(myMove.moveType,
                 mateCheckBoard.boardState[myMove.movePieceStartPosition.y][myMove.movePieceStartPosition.x],
@@ -265,6 +268,7 @@ public class MoveTypeCalculator {
     }
 
     public boolean moveVerification(Move move, boolean hasToTake){
+        curMove = null;
 
         if(move.movePieceEndPosition.getPiece() == null){
             if(!hasToTake){
@@ -273,6 +277,8 @@ public class MoveTypeCalculator {
             else if(move.movePieceEndPosition == myBoard.enPassant && startPosition.getPiece().getClass() == Pawn.class) {
                 Move myMove = new Move(MoveTypes.EnPassant, move.movePieceStartPosition, move.movePieceEndPosition, myBoard.enPassant, myBoard.enPassantPiecePos, myBoard.enPassantPiecePos);
                 curMove = myMove;
+            }
+            else{
             }
             return true;
         }
