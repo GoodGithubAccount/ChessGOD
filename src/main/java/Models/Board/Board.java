@@ -13,6 +13,7 @@ public class Board {
     public BoardPosition enPassant = null;
     public BoardPosition enPassantPiecePos = null;
     public int depth = 0;
+    public boolean checkForMate = false;
 
     public Board() {
     }
@@ -124,6 +125,8 @@ public class Board {
             myClone.enPassant = null;
             myClone.enPassantPiecePos = null;
         }
+
+        myClone.checkForMate = checkForMate;
 
         myClone.depth = depth + 1;
 

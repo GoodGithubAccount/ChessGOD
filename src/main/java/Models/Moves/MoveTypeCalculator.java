@@ -130,6 +130,10 @@ public class MoveTypeCalculator {
         for(int i = 0; i < moveLimit; i++){
             moveTo += direction;
 
+            if(moveTo + startPosition.y < 0 || moveTo + startPosition.y > 7){
+                break;
+            }
+
             BoardPosition movePos = myBoard.boardState[moveTo + startPosition.y][startPosition.x];
 
             MoveTypes myType;
@@ -153,9 +157,15 @@ public class MoveTypeCalculator {
             moveVerify(myMoveLeft, true);
         }
         catch(ArrayIndexOutOfBoundsException e){
+        }
+
+        try{
             BoardPosition takeRight = myBoard.boardState[direction + startPosition.y][startPosition.x + 1];
             Move myMoveRight = new Move(MoveTypes.PawnMove, startPosition, takeRight, takeRight, startPosition, startPosition);
             moveVerify(myMoveRight, true);
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+
         }
     }
     public void castlingCheck(){
@@ -239,7 +249,7 @@ public class MoveTypeCalculator {
         }
 
         if(curMove != null){
-            if(myBoard.depth == 0){
+            if(myBoard.depth == 0 || myBoard.checkForMate){
                 if(mateCheck(myMove)){
                     possibleMoves.add(curMove);
                 }
