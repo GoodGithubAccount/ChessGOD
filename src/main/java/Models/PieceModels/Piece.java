@@ -21,5 +21,5 @@ public abstract class Piece {
     }
 
     public abstract List<Move> canMove(BoardPosition startPosition, Board myBoard);
-
+    public abstract Piece clonePiece();
 }

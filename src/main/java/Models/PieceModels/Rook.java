@@ -23,4 +23,11 @@ public class Rook extends Piece{
 
         return myMoveBrain.calculateMoves();
     }
+
+    @Override
+    public Piece clonePiece(){
+        Piece myPiece = new Rook(isWhite);
+
+        return myPiece;
+    }
 }

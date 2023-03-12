@@ -261,7 +261,7 @@ public class MoveTypeCalculator {
 
         PieceMover.movePiece(mateCheckBoard, mateMove);
 
-        return (PositionChecker.checkForCheck(isWhite, mateCheckBoard));
+        return (PositionChecker.checkForCheck(isWhite, mateCheckBoard, false));
     }
 
     public boolean moveVerification(Move move, boolean hasToTake){

@@ -23,4 +23,11 @@ public class Pawn extends Piece{
 
         return myMoveBrain.calculateMoves();
     }
+
+    @Override
+    public Piece clonePiece(){
+        Piece myPiece = new Pawn(isWhite);
+
+        return myPiece;
+    }
 }

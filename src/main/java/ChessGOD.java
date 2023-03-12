@@ -59,7 +59,7 @@ public class ChessGOD {
             if (myMove != null) {
                 boolean isWhite = myMove.movePieceStartPosition.piece.isWhite;
                 PieceMover.movePiece(myBoard, myMove);
-                PositionChecker.checkForCheck(isWhite,myBoard);
+                PositionChecker.checkForCheck(isWhite,myBoard, true);
             } else {
                 System.out.println("Invalid move");
             }

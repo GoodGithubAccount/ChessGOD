@@ -23,4 +23,11 @@ public class King extends Piece{
 
         return myMoveBrain.calculateMoves();
     }
+
+    @Override
+    public Piece clonePiece(){
+        Piece myPiece = new King(isWhite);
+
+        return myPiece;
+    }
 }

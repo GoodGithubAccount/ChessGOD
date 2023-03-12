@@ -23,4 +23,11 @@ public class Bishop extends Piece{
 
         return myMoveBrain.calculateMoves();
     }
+
+    @Override
+    public Piece clonePiece(){
+        Piece myPiece = new Bishop(isWhite);
+
+        return myPiece;
+    }
 }

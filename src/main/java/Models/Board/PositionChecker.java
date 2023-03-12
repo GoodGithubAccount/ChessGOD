@@ -12,7 +12,7 @@ public class PositionChecker {
 
     // Checks for checks
     // Both used to check if player is checked, and if player will be checked if they move, thus move would be illegal
-    public static boolean checkForCheck(boolean isWhite, Board myBoard) {
+    public static boolean checkForCheck(boolean isWhite, Board myBoard, boolean toPrint) {
         List<Move> validMoves = new ArrayList<>();
         List<Move> kingSideValidMoves = new ArrayList<>();
         BoardPosition enemyKing = null;
@@ -42,6 +42,9 @@ public class PositionChecker {
         for (Move move : validMoves) {
             if(move != null){
                 if (move.moveTriggerPosition == enemyKing) {
+                    System.out.println("Move coming from - " +
+                            move.movePieceStartPosition.x + "," + move.movePieceStartPosition.y + "-" +
+                            move.moveTriggerPosition.x + "," + move.moveTriggerPosition.y);
                     check = true;
                 }
             }
@@ -54,13 +57,19 @@ public class PositionChecker {
         }
 
         if(noMoves && check){
-            System.out.println("CHECKMATE GAME OVER");
+            if(toPrint){
+                System.out.println("CHECKMATE GAME OVER");
+            }
         }
         else if(noMoves && !check){
-            System.out.println("STALEMATE GAME OVER");
+            if(toPrint){
+                System.out.println("STALEMATE GAME OVER");
+            }
         }
         else if(check && !noMoves){
-            System.out.println("CHECK");
+            if(toPrint){
+                System.out.println("CHECK");
+            }
             return false;
         }
 

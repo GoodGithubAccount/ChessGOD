@@ -86,7 +86,6 @@ public class Board {
                         pieceTag += "b";
                     }
 
-
                     // Cant decide if this should be handled in the object instead.
                     // For now sticking with this solution for prototype.
                     if (myPiece.getClass() == Queen.class) {
@@ -120,9 +119,9 @@ public class Board {
 
     public Board cloneBoard() {
         Board myClone = new Board();
-        if(this.enPassant != null){
+        if(enPassant != null){
             myClone.enPassant = new BoardPosition(enPassant.x, enPassant.y, enPassant.piece);
-            myClone.enPassantPiecePos = new BoardPosition(enPassantPiecePos.x, enPassantPiecePos.y, enPassantPiecePos.piece);
+            myClone.enPassantPiecePos = new BoardPosition(enPassantPiecePos.x, enPassantPiecePos.y, enPassantPiecePos.piece.clonePiece());
         }
         else{
             myClone.enPassant = null;
@@ -131,7 +130,11 @@ public class Board {
 
         for(int i = 0; i < boardSize; i++){
             for(int j = 0; j < boardSize; j++){
-                myClone.boardState[i][j] = new BoardPosition(boardState[i][j].x, boardState[i][j].y, boardState[i][j].piece);
+                Piece myPiece = boardState[i][j].piece;
+                if(myPiece != null){
+                    myPiece = myPiece.clonePiece();
+                }
+                myClone.boardState[i][j] = new BoardPosition(boardState[i][j].x, boardState[i][j].y, myPiece);
             }
         }
 

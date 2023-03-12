@@ -23,4 +23,11 @@ public class Queen extends Piece{
 
         return myMoveBrain.calculateMoves();
     }
+
+    @Override
+    public Piece clonePiece(){
+        Piece myPiece = new Queen(isWhite);
+
+        return myPiece;
+    }
 }
