@@ -3,6 +3,7 @@ package Models.AI;
 import Models.Board.Board;
 import Models.Board.PositionChecker;
 import Models.Moves.Move;
+import Models.Moves.MoveEvaluation;
 import Models.Moves.PieceMover;
 import Models.PieceModels.Piece;
 
@@ -17,15 +18,22 @@ public class Brain {
     List<Move> savedMove = new ArrayList<>();
     int savedValuation = 0;
 
+    MoveEvaluation bestEVAL = new MoveEvaluation(new ArrayList<>(), 0);
+
     public Brain(int depth){
         this.depth = depth;
     }
 
     public void recommendMove(boolean isWhite, Board myBoard){
-        savedMove = null;
-        savedValuation = 0;
 
-        testMove(isWhite, myBoard);
+        isGood = isWhite;
+
+        bestEVAL = new MoveEvaluation(new ArrayList<>(), 0);
+
+        MoveEvaluation bestVal = testMove2(isWhite, myBoard, 0, new MoveEvaluation(new ArrayList<>(), 0));
+
+        savedMove = bestEVAL.moves;
+        savedValuation = bestEVAL.valuation;
 
         System.out.println("EVALUATION BEST:" + savedValuation);
         for (Move move : savedMove){
@@ -35,67 +43,55 @@ public class Brain {
             }
         }
     }
+    public MoveEvaluation testMove2(boolean isWhite, Board myBoard, int curDepth, MoveEvaluation valAy){
+        MoveEvaluation bestEvaluation = valAy.clone();
 
-    public void testMove(boolean isWhite, Board myBoard){
-        List<Move> moves = PositionChecker.getMoves(!isWhite, myBoard);
+        MoveEvaluation tempVal = evaluatePosition(isWhite, myBoard, curDepth, valAy.clone());
 
-        for (Move move : moves) {
-            if(move != null){
-                evaluatePosition(isWhite, myBoard, move, 0, 0, new ArrayList<>());
-            }
+        if(tempVal.valuation >= bestEvaluation.valuation){
+            bestEvaluation = tempVal.clone();
         }
+
+        if(bestEvaluation.valuation > bestEVAL.valuation || (bestEvaluation.valuation >= bestEVAL.valuation && bestEvaluation.moves.size() >= bestEVAL.moves.size())){
+            bestEVAL = bestEvaluation.clone();
+        }
+
+        return bestEvaluation.clone();
     }
 
-    public int evaluatePosition(boolean isWhite, Board myBoardTT, Move moveT, int curDepth, int valuation, List<Move> moveBank){
-        List<Move> newMoveBank = new ArrayList<>(moveBank);
-        Move newMove = moveT.cloneMove();
-
-        newMoveBank.add(newMove);
+    public MoveEvaluation evaluatePosition(boolean isWhite, Board myBoardTT, int curDepth, MoveEvaluation valuation){
         curDepth++;
-
-        if(valuation > savedValuation){
-            savedValuation = valuation;
-            savedMove = newMoveBank;
-        }
+        Board myBoard = myBoardTT.cloneBoard();
 
         if(curDepth > 5){
-            return valuation;
+            return valuation.clone();
         }
 
-        Board myBoard = myBoardTT.cloneBoard();
-        PieceMover.movePiece(myBoard, newMove);
-
-        List <Move> allMoves = new ArrayList<>();
-
-        for(int i = 0; i < myBoard.boardSize; i++){
-            for(int j = 0; j < myBoard.boardSize; j++){
-                Piece myPiece = myBoard.boardState[i][j].piece;
-                if(myPiece != null && myPiece.isWhite == isWhite){
-                    allMoves.addAll(myPiece.canMove(myBoard.boardState[i][j],myBoard));
-                }
-            }
-        }
+        List <Move> allMoves = PositionChecker.getMoves(!isWhite, myBoard);
 
         boolean attack = false;
         int otherAttackVal = 0;
         Piece curPiece = null;
 
-        int moveAmounts = 0;
+        int moveAmounts = allMoves.size();
 
         for (Move move : allMoves) {
-            if(move != null && myBoard.boardState[move.movePieceStartPosition.y][move.movePieceStartPosition.x].piece != null){
+            Board myBoardNEW = myBoard.cloneBoard();
+            move = move.cloneMove(myBoardNEW);
+            if(move != null && myBoardNEW.boardState[move.movePieceStartPosition.y][move.movePieceStartPosition.x].piece != null){
+                MoveEvaluation thisVal = valuation.clone();
 
                 int moveVal = 0;
 
-                Piece movePiece = myBoard.boardState[move.movePieceStartPosition.y][move.movePieceStartPosition.x].piece;
-                Piece otherPiece = myBoard.boardState[move.movePieceEndPosition.y][move.movePieceEndPosition.x].piece;
+                Piece movePiece = myBoardNEW.boardState[move.movePieceStartPosition.y][move.movePieceStartPosition.x].piece;
+                Piece otherPiece = myBoardNEW.boardState[move.movePieceEndPosition.y][move.movePieceEndPosition.x].piece;
 
                 if(curPiece != movePiece){
                     // Save values
 
+                    moveAmounts = 0;
                     otherAttackVal = 0;
                     attack = false;
-                    valuation = 0;
                 }
                 else{
                     curPiece = movePiece;
@@ -120,27 +116,25 @@ public class Brain {
                         attack = true;
                     }
                 }
-                else{
-                    moveAmounts++;
-                }
 
-                moveVal += evaluatePosition(!isWhite,myBoard,move,curDepth,moveVal, newMoveBank);
+                moveVal += moveAmounts;
 
-                if(moveAmounts > moveVal){
-                    moveVal = moveAmounts;
-                }
+                MoveEvaluation newVal = thisVal.clone();
 
                 if(isWhite != isGood){
-                    valuation -= moveVal;
+                   newVal.valuation -= moveVal;
                 }
                 else{
-                    if(moveVal > valuation){
-                        valuation += moveVal;
-                    }
+                    newVal.valuation += moveVal;
                 }
+
+                newVal.moves.add(move);
+
+                PieceMover.movePiece(myBoardNEW, move);
+                testMove2(!isWhite, myBoardNEW, curDepth, newVal);
             }
         }
 
-        return valuation;
+        return valuation.clone();
     }
 }

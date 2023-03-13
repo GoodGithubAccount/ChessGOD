@@ -23,8 +23,14 @@ public class Move {
         this.otherPieceEndPosition = otherPieceEndPosition;
     }
 
-    public Move cloneMove(){
-        Move newMove = new Move(moveType,movePieceStartPosition.clonePosition(),movePieceEndPosition.clonePosition(),moveTriggerPosition.clonePosition(),otherPieceStartPosition.clonePosition(), otherPieceEndPosition.clonePosition());
+    public Move cloneMove(Board myBoard){
+        BoardPosition startPos = myBoard.boardState[movePieceStartPosition.y][movePieceStartPosition.x];
+        BoardPosition endPos = myBoard.boardState[movePieceEndPosition.y][movePieceEndPosition.x];
+        BoardPosition triggerPos = myBoard.boardState[moveTriggerPosition.y][moveTriggerPosition.x];
+        BoardPosition otherStartPos = myBoard.boardState[otherPieceStartPosition.y][otherPieceStartPosition.x];
+        BoardPosition otherEndPos = myBoard.boardState[otherPieceEndPosition.y][otherPieceEndPosition.x];
+
+        Move newMove = new Move(moveType,startPos,endPos,triggerPos,otherStartPos, otherEndPos);
 
         return newMove;
     }

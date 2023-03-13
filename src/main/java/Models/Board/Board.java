@@ -117,9 +117,9 @@ public class Board {
 
     public Board cloneBoard() {
         Board myClone = new Board();
-        if(enPassant != null){
+        if(enPassant != null && enPassantPiecePos != null){
             myClone.enPassant = new BoardPosition(enPassant.x, enPassant.y, enPassant.piece);
-            myClone.enPassantPiecePos = new BoardPosition(enPassantPiecePos.x, enPassantPiecePos.y, enPassantPiecePos.piece.clonePiece());
+            myClone.enPassantPiecePos = enPassantPiecePos.clonePosition();
         }
         else{
             myClone.enPassant = null;

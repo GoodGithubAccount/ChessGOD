@@ -293,7 +293,9 @@ public class MoveTypeCalculator {
             return true;
         }
         else if(move.movePieceEndPosition.piece.isWhite != isWhite){
-            curMove = move;
+            if(move.moveType != MoveTypes.PawnMove && move.moveType != MoveTypes.PawnDouble){
+                curMove = move;
+            }
             return false;
         }
         else{
