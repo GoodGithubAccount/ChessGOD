@@ -198,8 +198,6 @@ public class MoveTypeCalculator {
                     }
                 }
 
-                castleMoves.add(kingSideRook);
-
                 if(canMove){
                     castleMoves.add(kingSideRook);
                 }
@@ -249,7 +247,7 @@ public class MoveTypeCalculator {
         }
 
         if(curMove != null){
-            if(myBoard.depth == 0 || myBoard.checkForMate){
+            if(myBoard.checkForMate){
                 if(mateCheck(myMove)){
                     possibleMoves.add(curMove);
                 }
@@ -292,7 +290,7 @@ public class MoveTypeCalculator {
             }
             return true;
         }
-        else if(move.movePieceEndPosition.piece.isWhite != isWhite){
+        else if(move.movePieceEndPosition.piece.isWhite != move.movePieceStartPosition.piece.isWhite){
             if(move.moveType != MoveTypes.PawnMove && move.moveType != MoveTypes.PawnDouble){
                 curMove = move;
             }

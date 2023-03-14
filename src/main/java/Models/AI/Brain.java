@@ -17,6 +17,7 @@ public class Brain {
     boolean isGood;
     List<Move> savedMove = new ArrayList<>();
     int savedValuation = 0;
+    Move savMove = null;
 
     MoveEvaluation bestEVAL = new MoveEvaluation(new ArrayList<>(), 0);
 
@@ -24,8 +25,112 @@ public class Brain {
         this.depth = depth;
     }
 
+   public int evaluateBoard(Board myBoardTT) {
+        // Evaluate the current chessboard position
+        // and return a score for black or white
+
+       Board myBoard = myBoardTT.cloneBoard();
+
+       // Evaluate the current chessboard position
+       // and return a score for black or white
+       int score = 0;
+       // Loop through all squares on the board
+       for (int i = 0; i < 8; i++) {
+           for (int j = 0; j < 8; j++) {
+               Piece piece = myBoard.boardState[i][j].piece;
+               // Add the value of each piece on the board to the score
+
+               if(piece != null){
+                   if(piece.isWhite){
+                       score += piece.pieceValue;
+                   }
+                   else{
+                       score -= piece.pieceValue;
+                   }
+               }
+           }
+       }
+
+       return score;
+    }
+
+    public int minimax(Board myBoardTT, int depth, boolean isWhite, Move firstMove) {
+        if (depth == this.depth) {
+            int eval = evaluateBoard(myBoardTT.cloneBoard());
+
+            if(savedValuation == 0){
+                savedValuation = eval;
+            }
+
+            if(eval > savedValuation && isWhite == true){
+                savedValuation = eval;
+                savMove = firstMove.cloneMove(myBoardTT.cloneBoard());
+            }
+            else if(eval < savedValuation && isWhite == false){
+                savedValuation = eval;
+                savMove = firstMove.cloneMove(myBoardTT.cloneBoard());
+            }
+
+            return eval;
+        }
+        Board myBoard = myBoardTT.cloneBoard();
+
+        boolean first = true;
+
+        if(firstMove != null){
+            first = false;
+        }
+
+        List<Move> possibleMoves = PositionChecker.getMoves(!isWhite, myBoard);
+        if (isWhite == isGood) {
+            int bestScore = Integer.MIN_VALUE;
+            for (Move move : possibleMoves) {
+                if(first == true){
+                    firstMove = move;
+                }
+
+                Board myBoardC = myBoard.cloneBoard();
+                Move fakeMove = move.cloneMove(myBoardC);
+                PieceMover.movePiece(myBoardC,fakeMove);
+
+                int score = minimax(myBoardC.cloneBoard(), depth + 1, !isWhite, firstMove.cloneMove(myBoardC));
+                bestScore = Math.max(score, bestScore);
+            }
+
+            return bestScore;
+        } else {
+            int bestScore = Integer.MAX_VALUE;
+            for (Move move : possibleMoves) {
+                if(first == true){
+                    firstMove = move;
+                }
+
+                Board myBoardC = myBoard.cloneBoard();
+                Move fakeMove = move.cloneMove(myBoardC);
+                PieceMover.movePiece(myBoardC,fakeMove);
+
+                int score = minimax(myBoardC.cloneBoard(), depth + 1, !isWhite, firstMove.cloneMove(myBoardC));
+                bestScore = Math.min(score, bestScore);
+            }
+            return bestScore;
+        }
+    }
+
     public void recommendMove(boolean isWhite, Board myBoard){
 
+        savedValuation = 0;
+        isGood = isWhite;
+
+        int bestScore = minimax(myBoard.cloneBoard(), 0, isWhite, null);
+
+        System.out.println("BEST EVAL: " + bestScore);
+
+        Move move = savMove;
+
+        System.out.println("MOVE : " + (move.movePieceStartPosition.x + 1) + "," + (move.movePieceStartPosition.y + 1) + "-"
+                + (move.moveTriggerPosition.x + 1) + "," + (move.moveTriggerPosition.y + 1));
+
+        /*
         isGood = isWhite;
 
         bestEVAL = new MoveEvaluation(new ArrayList<>(), 0);
@@ -42,6 +147,8 @@ public class Brain {
                 + (move.moveTriggerPosition.x + 1) + "," + (move.moveTriggerPosition.y + 1));
             }
         }
+
+        */
     }
     public MoveEvaluation testMove2(boolean isWhite, Board myBoard, int curDepth, MoveEvaluation valAy){
         MoveEvaluation bestEvaluation = valAy.clone();

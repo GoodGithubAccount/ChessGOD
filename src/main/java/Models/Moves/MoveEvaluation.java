@@ -8,6 +8,10 @@ public class MoveEvaluation {
     public List<Move> moves;
     public int valuation;
 
+
+    public int bestEvaluation;
+    public int worstEvaluation;
+
     public MoveEvaluation(List<Move> moves, int valuation){
         this.moves = moves;
         this.valuation = valuation;

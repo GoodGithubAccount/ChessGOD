@@ -89,10 +89,6 @@ public class PositionChecker {
                 PieceMover.movePiece(mateCheckBoard, mateMove);
 
                 if(!isCheck(isWhite, mateCheckBoard, false)){
-                    System.out.println("Not mate because " + (move.movePieceStartPosition.x + 1) + "-" + (move.movePieceEndPosition.y + 1) + "-"
-                    + (move.moveTriggerPosition.x + 1) + "-" + (move.moveTriggerPosition.y + 1));
-                    System.out.println(mateCheckBoard.boardState[move.movePieceEndPosition.y][move.movePieceEndPosition.x].piece.getClass());
-
                     mate = false;
                 }
             }
@@ -115,8 +111,12 @@ public class PositionChecker {
         return stalemate;
     }
 
-    public static boolean checkCheck(boolean isWhite, Board myBoard, boolean toPrint){
+    public static boolean checkCheck(boolean isWhite, Board myBoardTT, boolean toPrint){
         boolean keepPlaying = false;
+
+
+        Board myBoard = myBoardTT.cloneBoard();
+        myBoard.checkForMate = false;
 
         if(isCheck(isWhite, myBoard, toPrint)){
             if(isMate(isWhite, myBoard)){

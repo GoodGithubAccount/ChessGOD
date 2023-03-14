@@ -13,7 +13,7 @@ public class Board {
     public BoardPosition enPassant = null;
     public BoardPosition enPassantPiecePos = null;
     public int depth = 0;
-    public boolean checkForMate = false;
+    public boolean checkForMate = true;
 
     public Board() {
     }

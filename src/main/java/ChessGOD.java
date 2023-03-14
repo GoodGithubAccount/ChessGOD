@@ -23,14 +23,16 @@ public class ChessGOD {
         Brain myBrain = new Brain(5);
         Scanner myScanner = new Scanner(System.in);
         while(true){
+
             if(whiteTurn){
                 System.out.println("WHITE");
-                myBrain.recommendMove(true, myBoard);
+                myBrain.recommendMove(true, myBoard.cloneBoard());
             }
             else{
                 System.out.println("BLACK");
-                myBrain.recommendMove(false, myBoard);
+                myBrain.recommendMove(false, myBoard.cloneBoard());
             }
+
 
             System.out.print("Awaiting input (x,y-x,y) : ");
             String input = myScanner.nextLine();
@@ -65,7 +67,7 @@ public class ChessGOD {
             if (myMove != null) {
                 boolean isWhite = myMove.movePieceStartPosition.piece.isWhite;
                 PieceMover.movePiece(myBoard, myMove);
-                PositionChecker.checkForCheck(!isWhite,myBoard, true);
+                PositionChecker.checkForCheck(!isWhite,myBoard.cloneBoard(), true);
             } else {
                 System.out.println("Invalid move");
             }
