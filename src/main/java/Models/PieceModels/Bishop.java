@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Bishop extends Piece{
 
-    public static final MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove, MoveTypes.StraightMove};
+    public static final MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove};
     public Bishop(boolean isWhite) {
         super(isWhite, Settings.BISHOP_MOVE_LIMIT, myMoveTypes, 400);
     }
@@ -27,6 +27,10 @@ public class Bishop extends Piece{
     @Override
     public Piece clonePiece(){
         Piece myPiece = new Bishop(isWhite);
+
+        if(this.hasMoved){
+            myPiece.hasMoved = true;
+        }
 
         return myPiece;
     }

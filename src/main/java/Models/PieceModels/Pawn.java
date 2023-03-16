@@ -28,6 +28,10 @@ public class Pawn extends Piece{
     public Piece clonePiece(){
         Piece myPiece = new Pawn(isWhite);
 
+        if(this.hasMoved){
+            myPiece.hasMoved = true;
+        }
+
         return myPiece;
     }
 }

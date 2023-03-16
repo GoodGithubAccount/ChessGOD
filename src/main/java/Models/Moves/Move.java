@@ -2,6 +2,7 @@ package Models.Moves;
 
 import Models.Board.Board;
 import Models.Board.BoardPosition;
+import Models.PieceModels.Piece;
 
 public class Move {
     public MoveTypes moveType;
@@ -13,6 +14,10 @@ public class Move {
     public BoardPosition otherPieceStartPosition;
     public BoardPosition otherPieceEndPosition;
 
+    public Piece pieceTaken = null;
+    public BoardPosition enPassantAtTime = null;
+    public Piece enPassantPieceAtTime = null;
+    public BoardPosition enPassantPosAtTime = null;
 
     public Move(MoveTypes moveType, BoardPosition movePieceStartPosition, BoardPosition movePieceEndPosition, BoardPosition moveTriggerPosition, BoardPosition otherPieceStartPosition, BoardPosition otherPieceEndPosition) {
         this.moveType = moveType;

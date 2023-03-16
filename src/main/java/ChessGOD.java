@@ -33,7 +33,6 @@ public class ChessGOD {
                 myBrain.recommendMove(false, myBoard.cloneBoard());
             }
 
-
             System.out.print("Awaiting input (x,y-x,y) : ");
             String input = myScanner.nextLine();
             int[][] move = myInputProcessor.processInput(input);

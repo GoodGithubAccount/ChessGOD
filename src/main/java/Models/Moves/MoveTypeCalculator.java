@@ -294,6 +294,12 @@ public class MoveTypeCalculator {
             if(move.moveType != MoveTypes.PawnMove && move.moveType != MoveTypes.PawnDouble){
                 curMove = move;
             }
+            else if (move.moveType == MoveTypes.PawnMove){
+                if(move.moveTriggerPosition.x != move.movePieceStartPosition.x){
+                    curMove = move;
+                }
+
+            }
             return false;
         }
         else{

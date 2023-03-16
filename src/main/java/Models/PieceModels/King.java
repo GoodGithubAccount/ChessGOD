@@ -28,6 +28,10 @@ public class King extends Piece{
     public Piece clonePiece(){
         Piece myPiece = new King(isWhite);
 
+        if(this.hasMoved){
+            myPiece.hasMoved = true;
+        }
+
         return myPiece;
     }
 }
