@@ -22,15 +22,38 @@ public class Brain {
     boolean isGood;
     Move savMove = null;
 
-    int numberOfThreads = 4; // Adjust this value based on your requirements
+    int numberOfThreads = 8; // Adjust this value based on your requirements
     ForkJoinPool customForkJoinPool = new ForkJoinPool(numberOfThreads);
 
     public Brain(int depth) {
-        this.depth = 9;
+        this.depth = 3;
     }
 
     public static int evaluateBoard(Board myBoard, boolean isMax) {
         int score = 0;
+
+        List<Move> goodMoves = PositionChecker.getMoves(!isMax,myBoard);
+        List<Move> badMoves = PositionChecker.getMoves(isMax,myBoard);
+
+        score += goodMoves.size() / 6;
+        score -= badMoves.size() / 6;
+
+        if(PositionChecker.isCheck(isMax,myBoard,false)){
+            score -= 750;
+
+            if(PositionChecker.isMate(isMax,myBoard)){
+                score = Integer.MIN_VALUE;
+                return score;
+            }
+
+        } else if (PositionChecker.isCheck(!isMax,myBoard,false)) {
+            score += 750;
+
+            if(PositionChecker.isMate(!isMax,myBoard)){
+                score = Integer.MAX_VALUE;
+                return score;
+            }
+        }
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {

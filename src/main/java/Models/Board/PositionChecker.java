@@ -73,8 +73,6 @@ public class PositionChecker {
     public static boolean isMate(boolean isWhite, Board myBoard){
         List<Move> validMoves = getMoves(!isWhite, myBoard);
 
-        boolean mate = true;
-
         for (Move move : validMoves) {
             if(move != null){
                 Board mateCheckBoard = myBoard.cloneBoard();
@@ -89,12 +87,12 @@ public class PositionChecker {
                 PieceMover.movePiece(mateCheckBoard, mateMove);
 
                 if(!isCheck(isWhite, mateCheckBoard, false)){
-                    mate = false;
+                    return false;
                 }
             }
         }
 
-        return mate;
+        return true;
     }
 
     public static boolean isStalemate(boolean isWhite, Board myBoard){
@@ -119,7 +117,7 @@ public class PositionChecker {
         myBoard.checkForMate = false;
 
         if(isCheck(isWhite, myBoard, toPrint)){
-            if(isMate(isWhite, myBoard)){
+            if(myBoardTT.checkForMate && isMate(isWhite, myBoard)){
                 if(toPrint){
                     System.out.println("CHECKMATE");
                 }

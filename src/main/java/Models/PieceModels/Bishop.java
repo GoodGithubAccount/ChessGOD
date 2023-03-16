@@ -14,7 +14,7 @@ public class Bishop extends Piece{
 
     public static final MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove};
     public Bishop(boolean isWhite) {
-        super(isWhite, Settings.BISHOP_MOVE_LIMIT, myMoveTypes, 400);
+        super(isWhite, Settings.BISHOP_MOVE_LIMIT, myMoveTypes, 300);
     }
 
     @Override

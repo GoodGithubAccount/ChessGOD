@@ -14,7 +14,7 @@ public class Knight extends Piece{
 
     public static final MoveTypes[] myMoveTypes = {MoveTypes.KnightMove};
     public Knight(boolean isWhite) {
-        super(isWhite, Settings.KNIGHT_MOVE_LIMIT, myMoveTypes, 250);
+        super(isWhite, Settings.KNIGHT_MOVE_LIMIT, myMoveTypes, 300);
     }
 
     @Override

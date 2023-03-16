@@ -14,7 +14,7 @@ public class Queen extends Piece{
 
     public static final MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove, MoveTypes.StraightMove};
     public Queen(boolean isWhite) {
-        super(isWhite, Settings.QUEEN_MOVE_LIMIT, myMoveTypes, 800);
+        super(isWhite, Settings.QUEEN_MOVE_LIMIT, myMoveTypes, 900);
     }
 
     @Override

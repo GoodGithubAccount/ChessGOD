@@ -30,7 +30,7 @@ public class ChessGOD {
             }
             else{
                 System.out.println("BLACK");
-                myBrain.recommendMove(false, myBoard.cloneBoard());
+                //myBrain.recommendMove(false, myBoard.cloneBoard());
             }
 
             System.out.print("Awaiting input (x,y-x,y) : ");

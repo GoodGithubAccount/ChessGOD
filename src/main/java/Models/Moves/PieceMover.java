@@ -3,6 +3,8 @@ package Models.Moves;
 import Models.Board.Board;
 import Models.Board.BoardPosition;
 import Models.PieceModels.Pawn;
+import Models.PieceModels.Piece;
+import Models.PieceModels.Queen;
 
 import java.util.List;
 
@@ -28,6 +30,16 @@ public class PieceMover {
     public static void moveDef(Board myBoard, Move myMove){
         myMove.movePieceEndPosition.setPiece(myMove.movePieceStartPosition.piece);
         myMove.movePieceStartPosition.setPiece(null);
+
+        Piece myPiece = myMove.movePieceEndPosition.piece;
+
+        if(myPiece.getClass() == Pawn.class){
+            if(myPiece.isWhite && myMove.movePieceEndPosition.y == 7){
+                myMove.movePieceEndPosition.piece = new Queen(true);
+            } else if (!myPiece.isWhite && myMove.movePieceEndPosition.y == 0) {
+                myMove.movePieceEndPosition.piece = new Queen(false);
+            }
+        }
     }
 
     public static void moveCastle(Board myBoard, Move myMove){

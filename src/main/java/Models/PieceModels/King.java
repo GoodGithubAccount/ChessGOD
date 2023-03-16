@@ -14,7 +14,7 @@ public class King extends Piece{
 
     public static final MoveTypes[] myMoveTypes = {MoveTypes.DiagonalMove, MoveTypes.StraightMove, MoveTypes.CastlingMove};
     public King(boolean isWhite) {
-        super(isWhite, Settings.KING_MOVE_LIMIT, myMoveTypes, 10000);
+        super(isWhite, Settings.KING_MOVE_LIMIT, myMoveTypes, 0);
     }
 
     @Override
